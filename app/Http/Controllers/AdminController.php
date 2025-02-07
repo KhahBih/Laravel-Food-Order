@@ -10,16 +10,16 @@ use App\Models\Admin;
 
 class AdminController extends Controller
 {
-    
+
    public function AdminLogin(){
         return view('admin.login');
    }
-   // End Method 
+   // End Method
 
    public function AdminDashboard(){
     return view('admin.index');
 }
-// End Method 
+// End Method
 
     public function AdminLoginSubmit(Request $request){
         $request->validate([
@@ -38,18 +38,18 @@ class AdminController extends Controller
         }
 
     }
-// End Method 
+// End Method
 
     public function AdminLogout(){
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login')->with('success','Logout Success');
     }
-    // End Method 
+    // End Method
 
     public function AdminForgetPassword(){
         return view('admin.forget_password');
     }
- // End Method 
+ // End Method
 
     public function AdminPasswordSubmit(Request $request){
         $request->validate([
@@ -72,7 +72,7 @@ class AdminController extends Controller
         \Mail::to($request->email)->send(new Websitemail($subject,$message));
         return redirect()->back()->with('success','Reset Password Link Send On Your Email');
     }
-     // End Method 
+     // End Method
 
      public function AdminResetPassword($token,$email){
         $admin_data = Admin::where('email',$email)->where('token',$token)->first();
@@ -83,7 +83,7 @@ class AdminController extends Controller
         return view('admin.reset_password',compact('token','email'));
 
      }
-     // End Method 
+     // End Method
 
      public function AdminResetPasswordSubmit(Request $request){
         $request->validate([
@@ -98,6 +98,42 @@ class AdminController extends Controller
 
         return redirect()->route('admin.login')->with('success','Password Reset Successfully');
      }
-     // End Method 
+     // End Method
+
+    public function AdminProfile(){
+        $id = Auth::guard('admin')->id();
+        $profileData = Admin::find($id);
+        return view('admin.admin_profile', compact('profileData'));
+    }
+
+    private function deleteOldImage(String $string): void{
+        $fullPath = public_path('upload/admin_images/'.$string);
+        if(file_exists($fullPath)){
+            unlink($fullPath);
+        }
+    }
+
+    public function AdminProfileStore(Request $request){
+        $id = Auth::guard('admin')->id();
+        $admin = Admin::find($id);
+        $admin->name = $request->name;
+        $admin->email = $request->email;
+        $admin->phone = $request->phone;
+        $admin->address = $request->address;
+        $oldPhotoPath = $admin->photo;
+
+        if($request->hasFile('photo')){
+            $file = $request->file('photo');
+            $filename = time().'.'.$file->getClientOriginalExtension();
+            $file->move(public_path('upload/admin_images'), $filename);
+            $admin->photo = $filename;
+
+            if($oldPhotoPath && $oldPhotoPath !== $filename){
+                $this->deleteOldImage($oldPhotoPath);
+            }
+        }
+        $admin->save();
+        return redirect()->back();
+    }
 
 }
