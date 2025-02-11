@@ -60,7 +60,7 @@
 
 
         <!-- Right Sidebar -->
-        @include('admin.body.rightside')
+        @include('client.body.rightside')
         <!-- /Right-bar -->
 
         <!-- Right bar overlay-->
