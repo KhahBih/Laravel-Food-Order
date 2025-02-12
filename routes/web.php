@@ -4,10 +4,13 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\UserController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', [UserController::class, 'Index'])->name('index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -34,8 +37,13 @@ Route::middleware('admin')->group(function () {
 // Client routes
 Route::middleware('client')->group(function () {
     Route::get('/client/dashboard', [ClientController::class, 'ClientDashboard'])->name('client.dashboard');
+    Route::get('/client/profile', [ClientController::class, 'ClientProfile'])->name('client.profile');
+    Route::get('/client/change/password', [ClientController::class, 'ClientChangePassword'])->name('client.change.password');
+    Route::post('/client/password-update', [ClientController::class, 'ClientPasswordUpdate'])->name('client.password.update');
+    Route::post('/client/profile/store', [ClientController::class, 'ClientProfileStore'])->name('client.profile.store');
 });
 Route::get('/client/login', [ClientController::class, 'ClientLogin'])->name('client.login');
+Route::get('/client/logout', [ClientController::class, 'ClientLogout'])->name('client.logout');
 Route::get('/client/register', [ClientController::class, 'ClientRegister'])->name('client.register');
 Route::post('/client/register/submit', [ClientController::class, 'ClientRegisterSubmit'])->name('client.register.submit');
 Route::post('/client/login_submit', [ClientController::class, 'ClientLoginSubmit'])->name('client.login_submit');
