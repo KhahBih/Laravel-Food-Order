@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function Index(){
-        return view('frontend.master');
+        return view('frontend.index');
     }
 }
