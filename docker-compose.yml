@@ -23,6 +23,7 @@ services:
             - sail
         depends_on:
             - mysql
+        restart: always
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -57,6 +58,7 @@ services:
         - MYSQL_ROOT_PASSWORD=password # Mật khẩu root cho MySQL
         networks:
         - sail # Đảm bảo rằng phpMyAdmin kết nối trong cùng một mạng Docker với ứng dụng
+        restart: always
 networks:
     sail:
         driver: bridge
