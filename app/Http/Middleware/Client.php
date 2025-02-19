@@ -17,9 +17,8 @@ class Client
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::guard('client')->check()) {
-           return redirect()->route('client.login')->with('error','You do not have permission to access this page');
-        }
-
+            return redirect()->route('client.login')->with('error','You do not have permission to access this page');
+         } 
 
         return $next($request);
     }
