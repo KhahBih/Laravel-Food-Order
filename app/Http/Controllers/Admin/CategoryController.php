@@ -9,9 +9,11 @@ use App\Models\Category;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\City;
+use App\Traits\ImageUploadTrait;
 
 class CategoryController extends Controller
 {
+    use ImageUploadTrait;
     public function AllCategory(){
         $category = Category::latest()->get();
         return view('admin.backend.category.all_category', compact('category'));
@@ -26,16 +28,11 @@ class CategoryController extends Controller
     public function StoreCategory(Request $request){
 
         if ($request->file('image')) {
-            $image = $request->file('image');
-            $manager = new ImageManager(new Driver());
-            $name_gen = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
-            $img = $manager->read($image);
-            $img->resize(300,300)->save(public_path('upload/category/'.$name_gen));
-            $save_url = 'upload/category/'.$name_gen;
+            $bannerPath = $this->updateImage($request, 'image', 'upload/category');
 
             Category::create([
                 'category_name' => $request->category_name,
-                'image' => $save_url,
+                'image' => $bannerPath,
             ]);
         }
 
