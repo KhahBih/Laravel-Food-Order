@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\Menu;
+use App\Models\City;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-use App\Models\Menu;
 use App\Traits\ImageUploadTrait;
-use App\Models\Product;
 
 
 class RestaurantController extends Controller
@@ -116,5 +117,9 @@ class RestaurantController extends Controller
         $city = City::latest()->get();
         $menu = Menu::latest()->get();
         return view('client.backend.product.add_product', compact('category','city','menu'));
+    }
+
+    public function StoreProduct(){
+
     }
 }

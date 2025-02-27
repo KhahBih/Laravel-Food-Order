@@ -24,13 +24,13 @@
         <!-- end page title -->
 
         <div class="row">
-            <div class="col-xl-9 col-lg-8"> 
+            <div class="col-xl-9 col-lg-8">
  <div class="card">
 <div class="card-body p-4">
 
 <form id="myForm" action="{{ route('menu.store') }}" method="post" enctype="multipart/form-data">
     @csrf
-    
+
 <div class="row">
     <div class="col-lg-12">
         <div>
@@ -38,25 +38,25 @@
                 <label for="example-text-input" class="form-label">Menu Name</label>
                 <input class="form-control" type="text" name="menu_name"  id="example-text-input">
             </div>
- 
+
         </div>
     </div>
 
     <div class="col-lg-6">
         <div class="mt-3 mt-lg-0">
-            
+
             <div class="form-group mb-3">
                 <label for="example-text-input" class="form-label">Menu Image</label>
                 <input class="form-control" name="image" type="file"  id="image">
             </div>
             <div class="mb-3">
-                 
+
                 <img id="showImage" src="{{ url('upload/no_image.jpg') }}" alt="" class="rounded-circle p-1 bg-primary" width="110">
             </div>
             <div class="mt-4">
                 <button type="submit" class="btn btn-primary waves-effect waves-light">Save Changes</button>
             </div>
-              
+
         </div>
     </div>
 </div>
@@ -72,16 +72,16 @@
 
 
 
-               
+
                 <!-- end tab content -->
             </div>
             <!-- end col -->
 
-            
+
             <!-- end col -->
         </div>
         <!-- end row -->
-        
+
     </div> <!-- container-fluid -->
 </div>
 
@@ -102,25 +102,25 @@
     $(document).ready(function (){
         $('#myForm').validate({
             rules: {
-                category_name: {
+                menu_name: {
                     required : true,
                 },
                 image: {
                     required : true,
-                }, 
-                
+                },
+
             },
             messages :{
-                category_name: {
-                    required : 'Please Enter Category Name',
+                menu_name: {
+                    required : 'Please Enter Menu Name',
                 },
                 image: {
                     required : 'Please Select Image',
-                }, 
-                 
+                },
+
 
             },
-            errorElement : 'span', 
+            errorElement : 'span',
             errorPlacement: function (error,element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
@@ -133,7 +133,7 @@
             },
         });
     });
-    
+
 </script>
 
 
