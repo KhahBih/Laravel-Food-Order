@@ -260,18 +260,13 @@ class RestaurantController extends Controller
     public function StoreGallery(Request $request){
 
         $images = $request->file('gallery_img');
+        $bannerPath = $this->uploadMultiImage($request, 'gallery_img', 'upload/gallery');
 
-        foreach ($images as $gimg) {
+        foreach ($bannerPath as $path) {
 
-            $manager = new ImageManager(new Driver());
-            $name_gen = hexdec(uniqid()).'.'.$gimg->getClientOriginalExtension();
-            $img = $manager->read($gimg);
-            $img->resize(500,500)->save(public_path('upload/gallery/'.$name_gen));
-            $save_url = 'upload/gallery/'.$name_gen;
-
-            Gllery::insert([
+            Gallery::insert([
                 'client_id' => Auth::guard('client')->id(),
-                'gallery_img' => $save_url,
+                'gallery_img' => $path,
             ]);
         } // end foreach
 
@@ -281,6 +276,63 @@ class RestaurantController extends Controller
         );
 
         return redirect()->route('all.gallery')->with($notification);
+
+    }
+
+    public function EditGallery($id){
+        $gallery = Gallery::find($id);
+        return view('client.backend.gallery.edit_gallery',compact('gallery'));
+     }
+     // End Method
+
+     public function UpdateGallery(Request $request){
+
+        $id = $request->id;
+        $bannerPath = $this->uploadImage($request, 'gallery_img', 'upload/gallery');
+
+        if ($request->hasFile('gallery_img')) {
+            $gallery = Gallery::find($id);
+            if ($gallery->gallery_img) {
+                $img = $gallery->gallery_img;
+                unlink($img);
+            }
+
+            $gallery->update([
+                'gallery_img' => $bannerPath,
+            ]);
+
+            $notification = array(
+                'message' => 'Menu Updated Successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('all.gallery')->with($notification);
+
+        } else {
+
+            $notification = array(
+                'message' => 'No Image Selected for Update',
+                'alert-type' => 'warning'
+            );
+
+            return redirect()->back()->with($notification);
+        }
+    }
+    // End Method
+
+    public function DeleteGallery($id){
+        $item = Gallery::find($id);
+        $img = $item->gallery_img;
+        unlink($img);
+
+        Gallery::find($id)->delete();
+
+        $notification = array(
+            'message' => 'Gallery Delete Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
 
     }
 }
