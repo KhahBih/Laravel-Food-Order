@@ -20,7 +20,8 @@ class RestaurantController extends Controller
 {
     use ImageUploadTrait;
     public function AllMenu(){
-        $menu = Menu::latest()->get();
+        $id = Auth::guard('client')->id();
+        $menu = Menu::where('client_id', $id)->get();
         return view('client.backend.menu.all_menu', compact('menu'));
     }
     // End Method
@@ -37,6 +38,7 @@ class RestaurantController extends Controller
             $bannerPath = $this->updateImage($request, 'image', 'upload/menu');
 
             Menu::create([
+                'client_id' => $request->id,
                 'menu_name' => $request->menu_name,
                 'image' => $bannerPath,
             ]);
@@ -66,6 +68,7 @@ class RestaurantController extends Controller
             $bannerPath = $this->updateImage($request, 'image', 'upload/menu');
 
             Menu::find($menu_id)->update([
+                'client_id' => $request->client_id,
                 'menu_name' => $request->menu_name,
                 'image' => $bannerPath,
             ]);
@@ -110,14 +113,16 @@ class RestaurantController extends Controller
     // End Method
 
     public function AllProduct(){
-        $product = Product::latest()->get();
+        $id = Auth::guard('client')->id();
+        $product = Product::where('client_id', $id)->get();
         return view('client.backend.product.all_product', compact('product'));
     }
 
     public function AddProduct(){
+        $id = Auth::guard('client')->id();
         $category = Category::latest()->get();
         $city = City::latest()->get();
-        $menu = Menu::latest()->get();
+        $menu = Menu::where('client_id', $id)->get();
         return view('client.backend.product.add_product', compact('category','city','menu'));
     }
 
@@ -248,7 +253,8 @@ class RestaurantController extends Controller
      /////////// All Gallery Method Start
 
      public function AllGallery(){
-        $gallery = Gallery::latest()->get();
+        $id = Auth::guard('client')->id();
+        $gallery = Gallery::where('client_id', $id)->get();
         return view('client.backend.gallery.all_gallery', compact('gallery'));
     }
 

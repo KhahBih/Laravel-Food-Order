@@ -30,7 +30,7 @@
 
 <form id="myForm" action="{{ route('menu.store') }}" method="post" enctype="multipart/form-data">
     @csrf
-
+    <input type="hidden" name="id" value="{{Auth::guard('client')->id()}}">
 <div class="row">
     <div class="col-lg-12">
         <div>
