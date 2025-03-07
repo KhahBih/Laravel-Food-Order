@@ -24,114 +24,114 @@
         <!-- end page title -->
 
         <div class="row">
-            <div class="col-xl-12 col-lg-12"> 
+            <div class="col-xl-12 col-lg-12">
  <div class="card">
 <div class="card-body p-4">
 
-<form id="myForm" action="{{ route('product.update') }}" method="post" enctype="multipart/form-data">
+<form id="myForm" action="{{ route('admin.product.update') }}" method="post" enctype="multipart/form-data">
     @csrf
 
     <input type="hidden" name="id" value="{{ $product->id }}" >
 
 <div class="row">
-    <div class="col-xl-3 col-md-6"> 
+    <div class="col-xl-3 col-md-6">
             <div class="form-group mb-3">
                 <label for="example-text-input" class="form-label">Category Name</label>
                 <select name="category_id" class="form-select">
                     <option>Select</option>
                     @foreach ($category as $cat)
                     <option value="{{ $cat->id }}" {{ $cat->id == $product->category_id ? 'selected' : '' }} >{{ $cat->category_name }}</option>
-                    @endforeach 
+                    @endforeach
                 </select>
-            </div> 
+            </div>
     </div>
 
-    <div class="col-xl-3 col-md-6"> 
+    <div class="col-xl-3 col-md-6">
         <div class="form-group mb-3">
             <label for="example-text-input" class="form-label">Menu Name</label>
             <select name="menu_id" class="form-select">
                 <option selected="" disabled="" >Select</option>
                 @foreach ($menu as $men)
                 <option value="{{ $men->id }}" {{ $men->id == $product->menu_id ? 'selected' : '' }}>{{ $men->menu_name }}</option>
-                @endforeach 
+                @endforeach
             </select>
-        </div> 
+        </div>
 </div>
 
 
 
-<div class="col-xl-3 col-md-6"> 
+<div class="col-xl-3 col-md-6">
     <div class="form-group mb-3">
         <label for="example-text-input" class="form-label">City Name</label>
         <select name="city_id" class="form-select">
             <option>Select</option>
             @foreach ($city as $cit)
             <option value="{{ $cit->id }}" {{ $cit->id == $product->city_id ? 'selected' : '' }}>{{ $cit->city_name }}</option>
-            @endforeach 
+            @endforeach
         </select>
-    </div> 
+    </div>
 </div>
 
-<div class="col-xl-3 col-md-6"> 
+<div class="col-xl-3 col-md-6">
     <div class="form-group mb-3">
         <label for="example-text-input" class="form-label">Client Name</label>
         <select name="client_id" class="form-select">
             <option>Select</option>
             @foreach ($client as $clie)
             <option value="{{ $clie->id }}" {{ $clie->id == $product->client_id ? 'selected' : '' }}>{{ $clie->name }}</option>
-            @endforeach 
+            @endforeach
         </select>
-    </div> 
+    </div>
 </div>
 
 
-<div class="col-xl-4 col-md-6"> 
+<div class="col-xl-4 col-md-6">
     <div class="form-group mb-3">
         <label for="example-text-input" class="form-label">Product Name</label>
         <input class="form-control" type="text" name="name"   id="example-text-input" value="{{ $product->name }}">
-    </div> 
+    </div>
 </div>
 
-<div class="col-xl-4 col-md-6"> 
+<div class="col-xl-4 col-md-6">
     <div class="form-group mb-3">
         <label for="example-text-input" class="form-label">Price</label>
         <input class="form-control" type="text" name="price"  id="example-text-input" value="{{ $product->price }}">
-    </div> 
+    </div>
 </div>
 
-<div class="col-xl-4 col-md-6"> 
+<div class="col-xl-4 col-md-6">
     <div class="form-group mb-3">
         <label for="example-text-input" class="form-label">Discount Price</label>
         <input class="form-control" type="text" name="discount_price"  id="example-text-input" value="{{ $product->discount_price }}">
-    </div> 
+    </div>
 </div>
 
-<div class="col-xl-6 col-md-6"> 
+<div class="col-xl-6 col-md-6">
     <div class="form-group mb-3">
         <label for="example-text-input" class="form-label">Size</label>
         <input class="form-control" type="text" name="size"  id="example-text-input" value="{{ $product->size }}">
-    </div> 
+    </div>
 </div>
 
 
-<div class="col-xl-6 col-md-6"> 
+<div class="col-xl-6 col-md-6">
     <div class="form-group mb-3">
         <label for="example-text-input" class="form-label">Product QTY </label>
         <input class="form-control" type="text" name="qty"  id="example-text-input" value="{{ $product->qty }}">
-    </div> 
+    </div>
 </div>
 
-<div class="col-xl-6 col-md-6"> 
+<div class="col-xl-6 col-md-6">
     <div class="form-group mb-3">
         <label for="example-text-input" class="form-label">Product Image </label>
         <input class="form-control" name="image" type="file"  id="image">
-    </div> 
+    </div>
 </div>
 
-<div class="col-xl-6 col-md-6"> 
+<div class="col-xl-6 col-md-6">
     <div class="form-group mb-3">
         <img id="showImage" src="{{ asset($product->image) }}" alt="" class="rounded-circle p-1 bg-primary" width="110">
-    </div> 
+    </div>
 </div>
 
 <div class="form-check mt-2">
@@ -140,7 +140,7 @@
         Best Seller
     </label>
 </div>
- 
+
 <div class="form-check mt-2">
     <input class="form-check-input"  name="most_populer" type="checkbox" id="formCheck2"  value="1" {{ $product->most_populer == 1 ? 'checked' : '' }}  >
     <label class="form-check-label" for="formCheck2">
@@ -151,7 +151,7 @@
 <div class="mt-4">
     <button type="submit" class="btn btn-primary waves-effect waves-light">Save Changes</button>
 </div>
-   
+
 </div>
 </form>
 </div>
@@ -165,16 +165,16 @@
 
 
 
-               
+
                 <!-- end tab content -->
             </div>
             <!-- end col -->
 
-            
+
             <!-- end col -->
         </div>
         <!-- end row -->
-        
+
     </div> <!-- container-fluid -->
 </div>
 
@@ -200,8 +200,8 @@
                 },
                 menu_id: {
                     required : true,
-                }, 
-                
+                },
+
             },
             messages :{
                 name: {
@@ -209,11 +209,11 @@
                 } ,
                 menu_id: {
                     required : 'Please Select One Menu',
-                }, 
-                 
+                },
+
 
             },
-            errorElement : 'span', 
+            errorElement : 'span',
             errorPlacement: function (error,element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
@@ -226,7 +226,7 @@
             },
         });
     });
-    
+
 </script>
 
 

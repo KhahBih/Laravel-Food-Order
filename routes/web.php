@@ -94,9 +94,15 @@ Route::middleware('admin')->group(function () {
         Route::get('/admin/add/product', 'AdminAddProduct')->name('admin.add.product');
         Route::post('/admin/store/product', 'AdminStoreProduct')->name('admin.product.store');
         Route::get('/admin/edit/product/{id}', 'AdminEditProduct')->name('admin.edit.product');
-        Route::post('/update/product', 'UpdateProduct')->name('product.update');
-        Route::get('/delete/product/{id}', 'DeleteProduct')->name('delete.product');
+        Route::post('/admin/update/product', 'AdminUpdateProduct')->name('admin.product.update');
+        Route::get('/admin/delete/product/{id}', 'AdminDeleteProduct')->name('admin.delete.product');
 
+    });
+
+    Route::controller(ManageController::class)->group(function(){
+        Route::get('/pending/restaurant', 'PendingRestaurant')->name('pending.restaurant');
+        Route::get('/clientchangeStatus', 'ClientChangeStatus');
+        Route::get('/approve/restaurant', 'ApproveRestaurant')->name('approve.restaurant');
     });
 
 

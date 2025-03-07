@@ -1,3 +1,8 @@
+@php
+    $id = Auth::guard('client')->id();
+    $client = App\Models\Client::findOrFail($id);
+    $status = $client->status;
+@endphp
 <div class="vertical-menu">
 
     <div data-simplebar class="h-100">

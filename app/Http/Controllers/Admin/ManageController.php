@@ -78,4 +78,95 @@ class ManageController extends Controller
         return view('admin.backend.product.edit_product', compact('category','city','menu','product','client'));
     }
 
+    public function AdminUpdateProduct(Request $request){
+        $pro_id = $request->id;
+        $product = Product::findOrFail($pro_id);
+
+        if ($request->file('image')) {
+            $path = $this->updateImage($request, 'image', 'upload/product', $product->image);
+
+            $product->name = $request->name;
+            $product->slug = strtolower(str_replace(' ','-',$request->name));
+            $product->category_id = $request->category_id;
+            $product->city_id = $request->city_id;
+            $product->menu_id = $request->menu_id;
+            $product->qty = $request->qty;
+            $product->size = $request->size;
+            $product->price = $request->price;
+            $product->discount_price = $request->discount_price;
+            $product->most_populer = $request->most_populer;
+            $product->best_seller = $request->best_seller;
+            $product->status = 1;
+            $product->created_at = Carbon::now();
+            $product->image = $path;
+            $product->save();
+
+            $notification = array(
+                'message' => 'Product Updated Successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('admin.all.product')->with($notification);
+
+        }else{
+            $product->name = $request->name;
+            $product->slug = strtolower(str_replace(' ','-',$request->name));
+            $product->category_id = $request->category_id;
+            $product->city_id = $request->city_id;
+            $product->menu_id = $request->menu_id;
+            $product->qty = $request->qty;
+            $product->size = $request->size;
+            $product->price = $request->price;
+            $product->discount_price = $request->discount_price;
+            $product->most_populer = $request->most_populer;
+            $product->best_seller = $request->best_seller;
+            $product->status = 1;
+            $product->created_at = Carbon::now();
+            $product->save();
+
+            $notification = array(
+                'message' => 'Product Updated Successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('admin.all.product')->with($notification);
+
+        }
+
+    }
+    // End Method
+
+    public function AdminDeleteProduct($id){
+        $item = Product::find($id);
+        $img = $item->image;
+        unlink($img);
+
+        Product::find($id)->delete();
+
+        $notification = array(
+            'message' => 'Product Delete Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+    }
+
+    public function PendingRestaurant(){
+        $client = Client::where('status',0)->get();
+        return view('admin.backend.restaurant.pending_restaurant',compact('client'));
+    }
+
+    public function ClientChangeStatus(Request $request){
+        $client = Client::find($request->client_id);
+        $client->status = $request->status;
+        $client->save();
+        return response()->json(['success' => 'Status Change Successfully']);
+    }
+     // End Method
+
+     public function ApproveRestaurant(){
+        $client = Client::where('status',1)->get();
+        return view('admin.backend.restaurant.approve_restaurant',compact('client'));
+    }
 }
