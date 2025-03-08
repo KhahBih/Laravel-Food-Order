@@ -105,10 +105,15 @@ Route::middleware('admin')->group(function () {
         Route::get('/approve/restaurant', 'ApproveRestaurant')->name('approve.restaurant');
     });
 
+    Route::controller(ManageController::class)->group(function(){
+        Route::get('/all/banner', 'AllBanner')->name('all.banner');
+
+    });
+
 
 }); // End Admin Middleware
 
-Route::middleware('client')->group(function () {
+Route::middleware(['client','status'])->group(function () {
 
     Route::controller(RestaurantController::class)->group(function(){
         Route::get('/all/menu', 'AllMenu')->name('all.menu');

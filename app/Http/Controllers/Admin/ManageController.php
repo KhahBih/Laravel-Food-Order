@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Menu;
 use App\Models\Client;
 use App\Models\Product;
+use App\Models\Banner;
 use App\Models\City;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Carbon\Carbon;
@@ -169,4 +170,9 @@ class ManageController extends Controller
         $client = Client::where('status',1)->get();
         return view('admin.backend.restaurant.approve_restaurant',compact('client'));
     }
+
+    public function AllBanner(){
+        $banner = Banner::latest()->get();
+        return view('admin.backend.banner.all_banner',compact('banner'));
+      }
 }
