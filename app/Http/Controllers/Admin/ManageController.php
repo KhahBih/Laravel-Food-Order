@@ -175,4 +175,24 @@ class ManageController extends Controller
         $banner = Banner::latest()->get();
         return view('admin.backend.banner.all_banner',compact('banner'));
       }
+
+      public function BannerStore(Request $request){
+
+        if ($request->file('image')) {
+            $path = $this->uploadImage($request, 'image', 'upload/banner');
+
+            Banner::create([
+                'url' => $request->url,
+                'image' => $path,
+            ]);
+        }
+
+        $notification = array(
+            'message' => 'Banner Inserted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+    }
 }
