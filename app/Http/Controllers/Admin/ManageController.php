@@ -195,4 +195,62 @@ class ManageController extends Controller
         return redirect()->back()->with($notification);
 
     }
+
+    public function EditBanner($id){
+        $banner = Banner::find($id);
+        if ($banner) {
+            $banner->image = asset($banner->image);
+        }
+        return response()->json($banner);
+    }
+
+    public function BannerUpdate(Request $request){
+        $id = $request->banner_id;
+        if ($request->file('image')) {
+            $banner = Banner::find($id);
+
+            $path = $this->updateImage($request, 'image', 'upload/banner', $banner->image);
+            $banner->url = $request->url;
+            $banner->image = $path;
+            $banner->save();
+
+            $notification = array(
+                'message' => 'Banner Updated Successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('all.banner')->with($notification);
+
+        } else {
+
+            Banner::find($id)->update([
+                'url' => $request->url,
+            ]);
+            $notification = array(
+                'message' => 'Banner Updated Successfully',
+                'alert-type' => 'success'
+            );
+
+            return redirect()->route('all.banner')->with($notification);
+
+        }
+
+    }
+    // End Method
+
+    public function DeleteBanner($id){
+        $item = Banner::find($id);
+        $img = $item->image;
+        unlink($img);
+
+        Banner::find($id)->delete();
+
+        $notification = array(
+            'message' => 'Banner Delete Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+    }
 }
