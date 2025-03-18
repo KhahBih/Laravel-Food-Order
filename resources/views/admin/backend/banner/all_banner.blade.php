@@ -141,7 +141,7 @@
 
                      <div class="form-group mb-3">
                          <label for="example-text-input" class="form-label">Banner Image</label>
-                         <input class="form-control" type="file" name="image" id="image">
+                         <input class="form-control" type="file" name="image" id="image"   >
                      </div>
 
                      <div class="form-group mb-3">

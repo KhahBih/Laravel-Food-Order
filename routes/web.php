@@ -116,7 +116,7 @@ Route::middleware('admin')->group(function () {
 
 }); // End Admin Middleware
 
-Route::middleware(['client','status'])->group(function () {
+Route::middleware(['client','clientStatus'])->group(function () {
 
     Route::controller(RestaurantController::class)->group(function(){
         Route::get('/all/menu', 'AllMenu')->name('all.menu');
