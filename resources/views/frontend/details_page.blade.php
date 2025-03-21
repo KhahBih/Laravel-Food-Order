@@ -106,9 +106,14 @@ $coupons = App\Models\Coupon::where('client_id',$client->id)->where('status','1'
 
         </div>
     </div>
+
+    @php
+    $bestsellers = App\Models\Product::where('status',1)->where('client_id',$client->id)->where('best_seller',1)->orderBy('id','desc')->limit(3)->get();
+@endphp
+
     <div class="row">
         <h5 class="mb-4 mt-3 col-md-12">Best Sellers</h5>
-
+        @foreach ($bestsellers as $bestseller)
         <div class="col-md-4 col-sm-6 mb-4">
         <div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
             <div class="list-card-image">
@@ -116,14 +121,23 @@ $coupons = App\Models\Coupon::where('client_id',$client->id)->where('status','1'
                 <div class="favourite-heart text-danger position-absolute"><a href="#"><i class="icofont-heart"></i></a></div>
                 <div class="member-plan position-absolute"><span class="badge badge-dark">Promoted</span></div>
                 <a href="#">
-                <img src="img/list/7.png" class="img-fluid item-img">
+                <img src="{{ asset($bestseller->image) }}" class="img-fluid item-img">
                 </a>
             </div>
             <div class="p-3 position-relative">
                 <div class="list-card-body">
-                    <h6 class="mb-1"><a href="#" class="text-black">Bite Me Sandwiches</a></h6>
-                    <p class="text-gray mb-2">North Indian • Indian</p>
-                    <p class="text-gray time mb-0"><a class="btn btn-link btn-sm text-black" href="#">$550 <span class="badge badge-success">NEW</span></a>  <span class="float-right">
+                    <h6 class="mb-1"><a href="#" class="text-black">{{$bestseller->name}}</a></h6>
+                    <p class="text-gray mb-2">{{ $bestseller['city']['city_name'] }}</p>
+
+                    <p class="text-gray time mb-0">
+                        @if ($bestseller->discount_price == NULL)
+                        <a class="btn btn-link btn-sm text-black" href="#">${{$bestseller->price}}  </a>
+                    @else
+                    $<del>{{$bestseller->price}}</del>
+                    <a class="btn btn-link btn-sm text-black" href="#">${{$bestseller->discount_price}}  </a>
+
+                    @endif
+                        <span class="float-right">
                     <a class="btn btn-outline-secondary btn-sm" href="#">ADD</a>
                     </span>
                     </p>
@@ -131,97 +145,99 @@ $coupons = App\Models\Coupon::where('client_id',$client->id)->where('status','1'
             </div>
         </div>
         </div>
-
+        @endforeach
 
 
     </div>
 
 
-
+    @foreach ($menus as $menu)
     <div class="row">
-        <h5 class="mb-4 mt-3 col-md-12">Starters <small class="h6 text-black-50">3 ITEMS</small></h5>
+        <h5 class="mb-4 mt-3 col-md-12">{{ $menu->menu_name }} <small class="h6 text-black-50">{{ $menu->products->count() }} ITEMS</small></h5>
         <div class="col-md-12">
         <div class="bg-white rounded border shadow-sm mb-4">
-            <div class="menu-list p-3 border-bottom">
 
+            @foreach ($menu->products as $product)
+            <div class="menu-list p-3 border-bottom">
                 <a class="btn btn-outline-secondary btn-sm  float-right" href="#">ADD</a>
 
                 <div class="media">
-                    <img class="mr-3 rounded-pill" src="{{ asset('frontend/img/5.jpg') }}" alt="Generic placeholder image">
+                    <img class="mr-3 rounded-pill" src="{{ asset($product->image) }}" alt="Generic placeholder image">
                     <div class="media-body">
-                    <h6 class="mb-1">Veg Spring Roll</h6>
-                    <p class="text-gray mb-0">$314 - 12" (30 cm)</p>
+                    <h6 class="mb-1">{{$product->name}}</h6>
+                    @if ($product->size == NULL)
+                    <p class="text-gray mb-0"> </p>
+                    @else
+                      <p class="text-gray mb-0"> ({{$product->size}} cm)</p>
+                    @endif
+
                     </div>
                 </div>
             </div>
-
+            @endforeach
 
         </div>
         </div>
     </div>
+    @endforeach
+
+      </div>
+
+    <div class="tab-pane fade" id="pills-gallery" role="tabpanel" aria-labelledby="pills-gallery-tab">
+        <div id="gallery" class="bg-white rounded shadow-sm p-4 mb-4">
+            <div class="restaurant-slider-main position-relative homepage-great-deals-carousel">
+            <div class="owl-carousel owl-theme homepage-ad">
+
+                @foreach ($gallerys as $index => $gallery)
+
+                <div class="item">
+                    <img class="img-fluid" src="{{ asset($gallery->gallery_img) }}">
+                    <div class="position-absolute restaurant-slider-pics bg-dark text-white">{{ $index + 1 }} of {{ $gallerys->count() }} Photos</div>
+                </div>
+                @endforeach
+
+            </div>
 
 
-                   </div>
-                   <div class="tab-pane fade" id="pills-gallery" role="tabpanel" aria-labelledby="pills-gallery-tab">
-                      <div id="gallery" class="bg-white rounded shadow-sm p-4 mb-4">
-                         <div class="restaurant-slider-main position-relative homepage-great-deals-carousel">
-                            <div class="owl-carousel owl-theme homepage-ad">
-                               <div class="item">
-                                  <img class="img-fluid" src="img/gallery/1.png">
-                               </div>
-                               <div class="item">
-                                  <img class="img-fluid" src="img/gallery/2.png">
-                               </div>
-                               <div class="item">
-                                  <img class="img-fluid" src="img/gallery/3.png">
-                               </div>
-                               <div class="item">
-                                  <img class="img-fluid" src="img/gallery/1.png">
-                               </div>
-                               <div class="item">
-                                  <img class="img-fluid" src="img/gallery/2.png">
-                               </div>
-                               <div class="item">
-                                  <img class="img-fluid" src="img/gallery/3.png">
-                               </div>
-                            </div>
-                            <div class="position-absolute restaurant-slider-pics bg-dark text-white">2 of 14 Photos</div>
-                            <div class="position-absolute restaurant-slider-view-all"><button type="button" class="btn btn-light bg-white">See all Photos</button></div>
-                         </div>
-                      </div>
-                   </div>
-                   <div class="tab-pane fade" id="pills-restaurant-info" role="tabpanel" aria-labelledby="pills-restaurant-info-tab">
-                      <div id="restaurant-info" class="bg-white rounded shadow-sm p-4 mb-4">
-                         <div class="address-map float-right ml-5">
-                            <div class="mapouter">
-                               <div class="gmap_canvas"><iframe width="300" height="170" id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=9&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe></div>
-                            </div>
-                         </div>
-                         <h5 class="mb-4">Restaurant Info</h5>
-                         <p class="mb-3">Jagjit Nagar, Near Railway Crossing,
-                            <br> Near Model Town, Ludhiana, PUNJAB
-                         </p>
-                         <p class="mb-2 text-black"><i class="icofont-phone-circle text-primary mr-2"></i> +91 01234-56789, +91 01234-56789</p>
-                         <p class="mb-2 text-black"><i class="icofont-email text-primary mr-2"></i> iamosahan@gmail.com, osahaneat@gmail.com</p>
-                         <p class="mb-2 text-black"><i class="icofont-clock-time text-primary mr-2"></i> Today  11am – 5pm, 6pm – 11pm
-                            <span class="badge badge-success"> OPEN NOW </span>
-                         </p>
-                         <hr class="clearfix">
-                         <p class="text-black mb-0">You can also check the 3D view by using our menue map clicking here &nbsp;&nbsp;&nbsp; <a class="text-info font-weight-bold" href="#">Venue Map</a></p>
-                         <hr class="clearfix">
-                         <h5 class="mt-4 mb-4">More Info</h5>
-                         <p class="mb-3">Dal Makhani, Panneer Butter Masala, Kadhai Paneer, Raita, Veg Thali, Laccha Paratha, Butter Naan</p>
-                         <div class="border-btn-main mb-4">
-                            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Breakfast</a>
-                            <a class="border-btn text-danger mr-2" href="#"><i class="icofont-close-circled"></i> No Alcohol Available</a>
-                            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Vegetarian Only</a>
-                            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Indoor Seating</a>
-                            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Breakfast</a>
-                            <a class="border-btn text-danger mr-2" href="#"><i class="icofont-close-circled"></i> No Alcohol Available</a>
-                            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Vegetarian Only</a>
-                         </div>
-                      </div>
-                   </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-restaurant-info" role="tabpanel" aria-labelledby="pills-restaurant-info-tab">
+        <div id="restaurant-info" class="bg-white rounded shadow-sm p-4 mb-4">
+            <div class="address-map float-right ml-5">
+            <div class="mapouter">
+                <div class="gmap_canvas"><iframe width="300" height="170" id="gmap_canvas" src="https://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=9&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe></div>
+            </div>
+            </div>
+            <h5 class="mb-4">Restaurant Info</h5>
+            <p class="mb-3">{{ $client->address }}
+
+            </p>
+            <p class="mb-2 text-black"><i class="icofont-phone-circle text-primary mr-2"></i> {{ $client->phone }}</p>
+            <p class="mb-2 text-black"><i class="icofont-email text-primary mr-2"></i> {{ $client->email }}</p>
+            <p class="mb-2 text-black"><i class="icofont-clock-time text-primary mr-2"></i> {{ $client->shop_info }}
+            <span class="badge badge-success"> OPEN NOW </span>
+            </p>
+            <hr class="clearfix">
+            <p class="text-black mb-0">You can also check the 3D view by using our menue map clicking here &nbsp;&nbsp;&nbsp; <a class="text-info font-weight-bold" href="#">Venue Map</a></p>
+            <hr class="clearfix">
+            <h5 class="mt-4 mb-4">More Info</h5>
+            <p class="mb-3">Dal Makhani, Panneer Butter Masala, Kadhai Paneer, Raita, Veg Thali, Laccha Paratha, Butter Naan</p>
+            <div class="border-btn-main mb-4">
+            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Breakfast</a>
+            <a class="border-btn text-danger mr-2" href="#"><i class="icofont-close-circled"></i> No Alcohol Available</a>
+            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Vegetarian Only</a>
+            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Indoor Seating</a>
+            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Breakfast</a>
+            <a class="border-btn text-danger mr-2" href="#"><i class="icofont-close-circled"></i> No Alcohol Available</a>
+            <a class="border-btn text-success mr-2" href="#"><i class="icofont-check-circled"></i> Vegetarian Only</a>
+            </div>
+        </div>
+    </div>
+
+
+
                    <div class="tab-pane fade" id="pills-book" role="tabpanel" aria-labelledby="pills-book-tab">
                       <div id="book-a-table" class="bg-white rounded shadow-sm p-4 mb-5 rating-review-select-page">
                          <h5 class="mb-4">Book A Table</h5>
