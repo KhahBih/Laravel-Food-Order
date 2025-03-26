@@ -1,5 +1,6 @@
 @extends('frontend.dashboard.dashboard')
 @section('dashboard')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 @php
 $products = App\Models\Product::where('client_id',$client->id)->limit(3)->get();
@@ -154,7 +155,7 @@ $coupons = App\Models\Coupon::where('client_id',$client->id)->where('status','1'
 
     @foreach ($menus as $menu)
     <div class="row">
-        <h5 class="mb-4 mt-3 col-md-12">{{ $menu->menu_name }} <small class="h6 text-black-50">{{ $menu->products->count() }} ITEMS</small></h5>
+        <h5 class="mb-4 mt-3 col-md-12">{{ $menu->menu_name }} <small class="h6 text-black-50">{{ $menu->products->count() }}</small></h5>
         <div class="col-md-12">
         <div class="bg-white rounded border shadow-sm mb-4">
 
@@ -427,7 +428,9 @@ $coupons = App\Models\Coupon::where('client_id',$client->id)->where('status','1'
 
              <div class="generator-bg rounded shadow-sm mb-4 p-4 osahan-cart-item">
                 <h5 class="mb-1 text-white">Your Order</h5>
-                <p class="mb-4 text-white">{{ count((array) session('cart')) }} ITEMS</p>
+                <p class="mb-4 text-white" id="cart-count">{{ count((array) session('cart')) }}
+                    {{count((array) session('cart')) <= 1 ? ' ITEM' : ' ITEMS'}}
+                </p>
     <div class="bg-white rounded shadow-sm mb-2">
 
    @php $total = 0 @endphp
@@ -437,13 +440,13 @@ $coupons = App\Models\Coupon::where('client_id',$client->id)->where('status','1'
          $total += $details['price'] * $details['quantity']
       @endphp
 
-   <div class="gold-members p-2 border-bottom">
-         <p class="text-gray mb-0 float-right ml-2">${{ $details['price'] * $details['quantity'] }}</p>
+   <div class="gold-members p-2 border-bottom" id="section-{{$id}}">
+         <p class="text-gray mb-0 float-right ml-2" id="cart-total-{{$id}}">${{ $details['price'] * $details['quantity'] }}</p>
          <span class="count-number float-right">
 
         <button class="btn btn-outline-secondary  btn-sm left dec" data-id="{{ $id }}" > <i class="icofont-minus"></i> </button>
 
-         <input class="count-number-input" type="text" value="{{  $details['quantity'] }}" readonly="">
+         <input class="count-number-input" type="text" value="{{  $details['quantity'] }}" readonly="" id="cart-quantity-{{$id}}">
 
          <button class="btn btn-outline-secondary btn-sm right inc" data-id="{{ $id }}" > <i class="icofont-plus"></i> </button>
 
@@ -463,7 +466,7 @@ $coupons = App\Models\Coupon::where('client_id',$client->id)->where('status','1'
                 </div>
    <div class="mb-2 bg-white rounded p-2 clearfix">
       <img class="img-fluid float-left" src="{{ asset('frontend/img/wallet-icon.png') }}">
-      <h6 class="font-weight-bold text-right mb-2">Subtotal : <span class="text-danger">${{ $total }}</span></h6>
+      <h6 class="font-weight-bold text-right mb-2">Subtotal : <span class="text-danger" id="subTotal">${{ $total }}</span></h6>
       <p class="seven-color mb-1 text-right">Extra charges may apply</p>
       <p class="text-black mb-0 text-right">You have saved $955 on the bill</p>
    </div>
@@ -501,7 +504,67 @@ $coupons = App\Models\Coupon::where('client_id',$client->id)->where('status','1'
 
       $('.remove').on('click', function() {
          var id = $(this).data('id');
+         removeFromCart(id);
       });
+
+      function updateQuantity(id,quantity){
+         $.ajax({
+            url: '{{ route("cart.updateQuantity") }}',
+            method: 'POST',
+            data: {
+               _token: '{{ csrf_token() }}',
+               id: id,
+               quantity: quantity
+            },
+            success: function(data){
+                let total = parseInt(data.price)*parseInt(data.quantity)
+               $('#cart-quantity-'+data.id).val(data.quantity)
+               $('#cart-total-'+data.id).text('$'+total)
+               $('#subTotal').text('$'+data.subTotal)
+            }
+         })
+      }
+
+      function updateCartSubtotal(){
+            $.ajax({
+                url: '{{ route("cart.updateSubtotal") }}',
+                method: 'POST',
+                data: {
+                _token: '{{ csrf_token() }}'
+                },
+                success: function(data){
+                    $('#subTotal').text('$'+data['subTotal'])
+                    if(data['count'] <= 1){
+                        $('#cart-count').text(data['count'] + ' ITEM')
+                    }else{
+                        $('#cart-count').text(data['count'] + ' ITEMS')
+                    }
+                }
+            });
+        }
+
+      function removeFromCart(id){
+         $.ajax({
+            url: '{{ route("cart.remove") }}',
+            method: 'POST',
+            data: {
+               _token: '{{ csrf_token() }}',
+               id: id
+            },
+            success: function(data){
+                $('#section-'+id).remove()
+                updateCartSubtotal()
+                if(data['count'] <= 1){
+                    $('#cart-count').text(data['count'] + ' ITEM')
+                }else{
+                    $('#cart-count').text(data['count'] + ' ITEMS')
+                }
+                toastr.success("Product Removed Successfully!");
+            }
+         });
+      }
+
+
 
    })
  </script>

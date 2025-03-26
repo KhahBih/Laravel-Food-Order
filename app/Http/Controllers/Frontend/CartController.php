@@ -39,4 +39,56 @@ class CartController extends Controller
         return redirect()->back()->with($notification);
         // return response()->json($cart);
     }
+
+    public function updateCartQuantity(Request $request){
+        $cart = session()->get('cart',[]);
+
+        if (isset($cart[$request->id])) {
+           $cart[$request->id]['quantity'] = $request->quantity;
+           session()->put('cart',$cart);
+        }
+        $subTotal = 0;
+        foreach($cart as $key => $item){
+            $subTotal += (int)$item['price']*(int)$item['quantity'];
+        }
+
+         return $data = [
+            'quantity' => $cart[$request->id]['quantity'],
+            'id' => $request->id,
+            'price' => $cart[$request->id]['price'],
+            'subTotal' => $subTotal
+         ];
+
+    }
+
+    public function UpdateCartSubtotal(Request $request){
+        $cart = session()->get('cart',[]);
+        $subTotal = 0;
+        $count = 0;
+        foreach($cart as $key => $item){
+            $subTotal += (int)$item['price']*(int)$item['quantity'];
+            $count++;
+        }
+
+         return $data = [
+            'subTotal' => $subTotal,
+            'count' => $count
+         ];
+
+    }
+
+    public function CartRemove(Request $request){
+        $cart = session()->get('cart',[]);
+
+        if (isset($cart[$request->id])) {
+           unset($cart[$request->id]);
+           session()->put('cart',$cart);
+        }
+        $notification = array(
+            'message' => 'Product Remove Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+     }
 }
